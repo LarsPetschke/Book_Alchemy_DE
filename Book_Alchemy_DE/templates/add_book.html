@@ -5,11 +5,31 @@
   </head>
   <body>
 
-    {% for book in books %}
-    <div>
-      <h3>{{ book.title }}</h3>
-    </div>
-    {% endfor %}
+  {% if message %}
+  <p style="color: green;">{{ message }}</p>
+  {% endif %}
+
+  <form action="/add_book" method="POST">
+
+    <label for="title">Book Title:</label>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="isbn">ISBN:</label>
+    <input type="text" id="isbn" name="isbn" required><br><br>
+
+    <label for="publication_year">Publication Year:</label>
+    <input type="number" id="publication_year" name="publication_year" required><br><br>
+
+    <label for="author_id">Author:</label>
+    <select id="author_id" name="author_id" required>
+      {% for author in authors %}
+      <option value="{{ author.id }}">{{ author.name }}</option>
+      {% endfor %}
+    </select><br><br>
+
+    <input type="submit" value="Add Book">
+
+  </form>
 
   </body>
 </html>
