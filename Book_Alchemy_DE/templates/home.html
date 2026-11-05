@@ -7,17 +7,8 @@
 
     <h2>Your Library</h2>
 
-    <!-- Suchformular -->
-    <form action="/" method="GET">
-      <input type="text" name="search" placeholder="Search books..." />
-      <input type="submit" value="Search">
-    </form>
-
-    <hr>
-
-    <!-- Meldung bei keinen Treffern -->
     {% if message %}
-    <p style="color: red;">{{ message }}</p>
+    <p style="color: green;">{{ message }}</p>
     {% endif %}
 
     {% for book in books %}
@@ -29,6 +20,11 @@
       <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
            alt="Cover for {{ book.title }}">
       {% endif %}
+
+      <!-- Delete Button -->
+      <form action="/book/{{ book.id }}/delete" method="POST" style="margin-top: 10px;">
+        <button type="submit" style="color: red;">Delete Book</button>
+      </form>
     </div>
     {% endfor %}
 

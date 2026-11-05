@@ -71,27 +71,37 @@ def add_book():
 
 
 # ---------------------------
-# ROUTE: Startseite + Stichwortsuche
+# ROUTE: Startseite
 # ---------------------------
 @app.route("/")
 def home():
-    search = request.args.get("search", None)
+    books = Book.query.all()
+    return render_template("home.html", books=books)
 
-    query = Book.query
 
-    # Stichwortsuche aktivieren
-    if search:
-        query = query.filter(Book.title.ilike(f"%{search}%"))
+# ---------------------------
+# ROUTE: Buch löschen
+# ---------------------------
+@app.route("/book/<int:book_id>/delete", methods=["POST"])
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    author = book.author
 
-    books = query.all()
+    # Buch löschen
+    db.session.delete(book)
+    db.session.commit()
 
-    # Meldung bei keinen Treffern
-    if search and len(books) == 0:
-        message = f"No books found for '{search}'."
+    # Prüfen, ob der Autor noch Bücher hat
+    remaining_books = Book.query.filter_by(author_id=author.id).count()
+
+    if remaining_books == 0:
+        db.session.delete(author)
+        db.session.commit()
+        message = f"Book deleted. Author '{author.name}' removed because they had no remaining books."
     else:
-        message = None
+        message = "Book successfully deleted."
 
-    return render_template("home.html", books=books, message=message)
+    return render_template("home.html", books=Book.query.all(), message=message)
 
 
 # ---------------------------
