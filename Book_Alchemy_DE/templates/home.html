@@ -7,6 +7,19 @@
 
     <h2>Your Library</h2>
 
+    <!-- Suchformular -->
+    <form action="/" method="GET">
+      <input type="text" name="search" placeholder="Search books..." />
+      <input type="submit" value="Search">
+    </form>
+
+    <hr>
+
+    <!-- Meldung bei keinen Treffern -->
+    {% if message %}
+    <p style="color: red;">{{ message }}</p>
+    {% endif %}
+
     {% for book in books %}
     <div style="margin-bottom: 20px;">
       <h3>{{ book.title }}</h3>

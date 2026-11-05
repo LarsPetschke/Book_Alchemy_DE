@@ -71,12 +71,27 @@ def add_book():
 
 
 # ---------------------------
-# ROUTE: Startseite
+# ROUTE: Startseite + Stichwortsuche
 # ---------------------------
 @app.route("/")
 def home():
-    books = Book.query.all()
-    return render_template("home.html", books=books)
+    search = request.args.get("search", None)
+
+    query = Book.query
+
+    # Stichwortsuche aktivieren
+    if search:
+        query = query.filter(Book.title.ilike(f"%{search}%"))
+
+    books = query.all()
+
+    # Meldung bei keinen Treffern
+    if search and len(books) == 0:
+        message = f"No books found for '{search}'."
+    else:
+        message = None
+
+    return render_template("home.html", books=books, message=message)
 
 
 # ---------------------------
